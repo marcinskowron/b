@@ -3,7 +3,29 @@ import pandas as pd
 
 address = 'https://api.spacexdata.com/v3/launches'
 r = requests.get(address)
-df = pd.DataFrame(r.json())
+r_json = r.json()
+
+ships = []
+for launch in r_json:
+    ships += (launch['ships'])
+ships = list(set(ships))
+
+additionalDF = []
+temp = []
+for ship in ships:
+    for launch in r_json:
+        if ship in launch['ships']:
+            temp += '1'
+        else:
+            temp += '0'
+    additionalDF.insert(-1, list(temp))
+
+print(additionalDF)
+
+df = pd.DataFrame(r_json)
+
+for s in ships:
+    df[s] = 0
 
 
 #Korzystając z API SpaceX (https://github.com/r-spacex/SpaceX-API) odpowiedz na pytania:
